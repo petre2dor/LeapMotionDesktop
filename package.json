@@ -1,0 +1,22 @@
+{
+  "name": "leapgim",
+  "version": "0.0.5",
+  "description": "Control mouse and keybord with Leap Motion",
+  "main": "leapgim.js",
+  "author": "Timo Aho",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "leapjs": "0.6.4",
+    "express": "4.10.7",
+    "socket.io": "1.2.1",
+    "socket.io-client": "1.2.1",
+    "java" : "0.4.4",
+    "forever" : "0.13.0",
+    "wait.for": "0.6.6"
+  },
+  "keywords": [
+    "leap",
+    "leapmotion",
+    "mouse"
+  ]
+}
