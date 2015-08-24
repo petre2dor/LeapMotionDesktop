@@ -144,7 +144,7 @@ var controller = Leap.loop(
                 });
 
             }
-            /*if(frame.pointables.length == 1){
+            /*if(frame.pointables.length > 1){
                 frameCount++;
 
                 var pointable = frame.pointables[0];

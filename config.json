@@ -6,49 +6,49 @@
         	{
         		"keyCombo": "VK_CONTROL + VK_ALT + VK_Z",
         		"waitBeforeSameGesture": 1000, 
-        		"waitBeforeNextGesture": 1000
+        		"waitBeforeNextGesture": 700
         	},
 
         "oneFingerRotateClockwise": 
         	{
         		"keyCombo": "VK_CONTROL + VK_UP",
-        		"waitBeforeSameGesture": 400, 
-        		"waitBeforeNextGesture": 1000
+        		"waitBeforeSameGesture": 300, 
+        		"waitBeforeNextGesture": 700
         	},
 
         "oneFingerRotateContraClockwise": 
         	{
         		"keyCombo": "VK_CONTROL + VK_DOWN",
-        		"waitBeforeSameGesture": 400, 
-        		"waitBeforeNextGesture": 1000
+        		"waitBeforeSameGesture": 300, 
+        		"waitBeforeNextGesture": 700
         	},
 
         "openHandSwipeLeft": 
         {
         	"keyCombo": "VK_CONTROL + VK_ALT + VK_RIGHT",
-        	"waitBeforeSameGesture": 700, 
-        	"waitBeforeNextGesture": 1000
+        	"waitBeforeSameGesture": 200, 
+        	"waitBeforeNextGesture": 700
         },
 
         "openHandSwipeRight": 
         {
         	"keyCombo": "VK_CONTROL + VK_ALT + VK_LEFT",
-        	"waitBeforeSameGesture": 700, 
-        	"waitBeforeNextGesture": 1000
+        	"waitBeforeSameGesture": 200, 
+        	"waitBeforeNextGesture": 700
         },
 
         "openHandSwipeUp": 
         {
         	"keyCombo": "VK_CONTROL + VK_ALT + VK_DOWN",
-        	"waitBeforeSameGesture": 700, 
-        	"waitBeforeNextGesture": 1000
+        	"waitBeforeSameGesture": 200, 
+        	"waitBeforeNextGesture": 700
         },
 
         "openHandSwipeDown": 
         {
         	"keyCombo": "VK_CONTROL + VK_ALT + VK_UP",
-        	"waitBeforeSameGesture": 700, 
-        	"waitBeforeNextGesture": 1000
+        	"waitBeforeSameGesture": 200, 
+        	"waitBeforeNextGesture": 700
         }
     }
 
