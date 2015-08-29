@@ -1,55 +1,65 @@
 {
 
-    "keyboard":{
-    
-        "oneFingerKeyTap": 					
-        	{
-        		"keyCombo": "VK_CONTROL + VK_ALT + VK_Z",
-        		"waitBeforeSameGesture": 1000, 
-        		"waitBeforeNextGesture": 700
-        	},
+    "oneFingerKeyTap": 					
+	{
+		"keyCombo": "VK_CONTROL + VK_ALT + VK_Z",
+		"waitBeforeSameGesture": 1000, 
+		"waitBeforeNextGesture": 700
+	},
 
-        "oneFingerRotateClockwise": 
-        	{
-        		"keyCombo": "VK_CONTROL + VK_UP",
-        		"waitBeforeSameGesture": 300, 
-        		"waitBeforeNextGesture": 700
-        	},
+    "oneFingerRotateClockwise": 
+	{
+		"keyCombo": "VK_CONTROL + VK_UP",
+		"waitBeforeSameGesture": 300, 
+		"waitBeforeNextGesture": 700
+	},
 
-        "oneFingerRotateContraClockwise": 
-        	{
-        		"keyCombo": "VK_CONTROL + VK_DOWN",
-        		"waitBeforeSameGesture": 300, 
-        		"waitBeforeNextGesture": 700
-        	},
+    "oneFingerRotateContraClockwise": 
+	{
+		"keyCombo": "VK_CONTROL + VK_DOWN",
+		"waitBeforeSameGesture": 300, 
+		"waitBeforeNextGesture": 700
+	},
 
-        "openHandSwipeLeft": 
-        {
-        	"keyCombo": "VK_CONTROL + VK_ALT + VK_RIGHT",
-        	"waitBeforeSameGesture": 200, 
-        	"waitBeforeNextGesture": 700
-        },
+    "openHandSwipeLeft": 
+    {
+    	"keyCombo": "VK_CONTROL + VK_ALT + VK_RIGHT",
+    	"waitBeforeSameGesture": 200, 
+    	"waitBeforeNextGesture": 700
+    },
 
-        "openHandSwipeRight": 
-        {
-        	"keyCombo": "VK_CONTROL + VK_ALT + VK_LEFT",
-        	"waitBeforeSameGesture": 200, 
-        	"waitBeforeNextGesture": 700
-        },
+    "openHandSwipeRight": 
+    {
+    	"keyCombo": "VK_CONTROL + VK_ALT + VK_LEFT",
+    	"waitBeforeSameGesture": 200, 
+    	"waitBeforeNextGesture": 700
+    },
 
-        "openHandSwipeUp": 
-        {
-        	"keyCombo": "VK_CONTROL + VK_ALT + VK_DOWN",
-        	"waitBeforeSameGesture": 200, 
-        	"waitBeforeNextGesture": 700
-        },
+    "openHandSwipeUp": 
+    {
+    	"keyCombo": "VK_CONTROL + VK_ALT + VK_DOWN",
+    	"waitBeforeSameGesture": 200, 
+    	"waitBeforeNextGesture": 700
+    },
 
-        "openHandSwipeDown": 
-        {
-        	"keyCombo": "VK_CONTROL + VK_ALT + VK_UP",
-        	"waitBeforeSameGesture": 200, 
-        	"waitBeforeNextGesture": 700
-        }
+    "openHandSwipeDown": 
+    {
+    	"keyCombo": "VK_CONTROL + VK_ALT + VK_UP",
+    	"waitBeforeSameGesture": 200, 
+    	"waitBeforeNextGesture": 700
+    },
+
+    "twoFingerHoverDown":
+    {
+        "keyCombo": "mouseWheelDown",
+        "waitBeforeSameGesture": 100, 
+        "waitBeforeNextGesture": 200  
+    },
+
+    "twoFingerHoverUp":
+    {
+        "keyCombo": "mouseWheelUp",
+        "waitBeforeSameGesture": 100, 
+        "waitBeforeNextGesture": 200  
     }
-
 }

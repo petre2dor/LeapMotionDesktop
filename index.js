@@ -40,6 +40,8 @@ var screenResolution = {
 }
 console.log('screenResolution:' + screenResolution);
 
+var mouseActions = ['mouseWheelUp', 'mouseWheelDown'];
+
 var mouseDown           = false;
 var frameCount          = 0;
 var touchDistanceSum    = 0;
@@ -48,7 +50,9 @@ var previousGesture     = 'none';
 var previousGestureTime = 0;
 
 function runGesture(gesture){
-    var gestureConfig =  config.keyboard[gesture];
+    
+    var gestureConfig =  config[gesture];
+
     if(gesture == previousGesture){
         wait = gestureConfig.waitBeforeSameGesture;
     }else{
@@ -56,21 +60,41 @@ function runGesture(gesture){
     }
     var now = new Date();
     if( (now.getTime() - previousGestureTime) < wait ){
-        console.log('too soon');
         return false;
     }
 
     var keyCombo = gestureConfig.keyCombo.split(' + ');
 
-    console.log(keyCombo);
     // press keys
     for (var i = 0; i < keyCombo.length; i++) {
-        keyDown(keyCombo[i]);
-    };
+        console.log( 'key: ' + keyCombo[i] + ', in array: ' + mouseActions.indexOf(keyCombo[i]) );
+        if( mouseActions.indexOf(keyCombo[i]) == -1 ){
+            keyDown(keyCombo[i]);
+        }
+    }
+
+    // do mouse actions
+    for (var i = 0; i < keyCombo.length; i++) {
+        if( mouseActions.indexOf(keyCombo[i]) > -1 ){
+            switch (keyCombo[i]) {
+                case 'mouseWheelUp':
+                    robot.mouseWheel(-1);
+                    break;
+                case 'mouseWheelDown':
+                    robot.mouseWheel(1);
+                    break;
+                default:
+                    console.log('No action for ' + keyCombo[i]);
+                    break;
+            }
+        }
+    }
 
     //reverse the arr and release keys
     for (var i = keyCombo.length - 1; i >= 0; i--) {
-        keyUp(keyCombo[i]);
+        if(mouseActions.indexOf(keyCombo[i]) == -1){
+            keyUp(keyCombo[i]);
+        }
     };
 
     now = new Date();
@@ -97,12 +121,34 @@ var controller = Leap.loop(
     }, 
     function(frame){
         if(frame.valid){
+            var extendedFingers = [];
+            if(frame.hands.length > 0){
+                var hand = frame.hands[0];
+                var fingerMap = ["thumb", "index", "middle", "ring", "pinky"];
+                var i = 0;
+                for(var f = 0; f < hand.fingers.length; f++){
+                    var finger = hand.fingers[f];
+                    if(finger.extended){
+                        extendedFingers[i] = fingerMap[finger.type];
+                        i++;
+                    }
+                }
+            }
+
             if(frame.gestures.length > 0){
                 //check out gestures
                 frame.gestures.forEach(function(gesture){
                     // console.log(gesture.id);
                     switch (gesture.type){
                         case "circle":
+                            if(
+                                extendedFingers.length > 2 || 
+                                extendedFingers.indexOf('thumb') == -1 || 
+                                extendedFingers.indexOf('index') == -1 
+                            ){
+                                // get out
+                                break;
+                            }
                             var direction;
                             var pointableID = gesture.pointableIds[0];
                             var direction = frame.pointable(pointableID).direction;
@@ -115,6 +161,9 @@ var controller = Leap.loop(
                             }
                             break;
                         case "keyTap":
+                            // if(extendedFingers.length > 1 || extendedFingers.indexOf('index') == -1 ){
+                            //     break;
+                            // }
                             runGesture('oneFingerKeyTap');
                             break;
                         case "screenTap":
@@ -122,28 +171,55 @@ var controller = Leap.loop(
                             break;
                         case "swipe":
                             if(gesture.state == 'update'){
-                            //Classify swipe as either horizontal or vertical
-                            var isHorizontal = Math.abs(gesture.direction[0]) > Math.abs(gesture.direction[1]);
-                            //Classify as right-left or up-down
-                            if(isHorizontal){
-                                if(gesture.direction[0] > 0){
-                                    runGesture('openHandSwipeRight');
-                                } else {
-                                    runGesture('openHandSwipeLeft');
-                                }
-                            } else { //vertical
-                                if(gesture.direction[1] > 0){
-                                    runGesture('openHandSwipeUp');
-                                } else {
-                                    runGesture('openHandSwipeDown');
-                                }                  
-                            }
-                        }
-                        break;
-                  }
-                });
+                                var swipeDirection = '';
 
+                                //Classify swipe as either horizontal or vertical
+                                var isHorizontal = Math.abs(gesture.direction[0]) > Math.abs(gesture.direction[1]);
+                                //Classify as right-left or up-down
+                                if(isHorizontal){
+                                    if(gesture.direction[0] > 0){
+                                        swipeDirection = 'right';
+                                    } else {
+                                        swipeDirection = 'left';
+                                    }
+                                } else { //vertical
+                                    if(gesture.direction[1] > 0){
+                                        swipeDirection = 'up';
+                                    } else {
+                                        swipeDirection = 'down';
+                                    }                  
+                                }
+                                //open hand swipe
+                                if(extendedFingers.length == 5){
+                                    console.log('openHandSwipe' + swipeDirection[0].toUpperCase() + swipeDirection.slice(1));
+                                    runGesture('openHandSwipe' + swipeDirection[0].toUpperCase() + swipeDirection.slice(1));
+                                    break;
+                                }
+                            }
+
+                    }
+                });
             }
+
+            if(
+                extendedFingers.length == 2 && 
+                extendedFingers.indexOf('index') != -1 && 
+                extendedFingers.indexOf('middle') != -1 
+            ){
+                var index = hand.indexFinger;
+                var middle = hand.middleFinger;
+                if(Math.abs(index.stabilizedTipPosition[1] - middle.stabilizedTipPosition[1]) < 20){
+                    console.log("index " + index.stabilizedTipPosition);
+                    console.log("middle " + middle.stabilizedTipPosition);
+                    if(index.stabilizedTipPosition[1] < 100){
+                        runGesture("twoFingerHoverDown");
+                    }else if(index.stabilizedTipPosition[1] > 160){                        
+                        runGesture("twoFingerHoverUp");
+                    }
+                }
+            }
+
+
             /*if(frame.pointables.length > 1){
                 frameCount++;
 
