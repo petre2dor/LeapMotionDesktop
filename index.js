@@ -220,9 +220,7 @@ var controller = Leap.loop(
             }
 
 
-            /*if(frame.pointables.length > 1){
-                frameCount++;
-
+            /*if(extendedFingers.length == 1 && extendedFingers.indexOf('index') != -1){
                 var pointable = frame.pointables[0];
                 var stabilizedPosition = pointable.stabilizedTipPosition;
                 var tipPosition = pointable.tipPosition;
@@ -258,9 +256,6 @@ var controller = Leap.loop(
                     }
                 }
                 touchDistanceSum += pointable.touchDistance;
-                if( frameCount % 1000 == 0){
-                    console.log('touchDistance average ' + (touchDistanceSum/frameCount));
-                }
             }*/
         }
     }

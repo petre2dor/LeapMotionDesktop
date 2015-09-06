@@ -2,17 +2,16 @@
     "name": "LeapMotionDesktop",
     "version": "0.0.1",
     "description": " Control your desktop with hand movement and gestures",
-    "main": "index.js",
     "author": "Petre Tudor",
     "license": "GNU GENERAL PUBLIC LICENSE V3",
     "dependencies": {
         "leapjs": "0.6.4",
-        "java": "0.4.4",
-        "forever": "0.13.0"
+        "java": "0.4.4"
     },
     "keywords": [
         "leap",
         "leapmotion",
         "mouse"
-    ]
+    ],
+    "main": "index.js"
 }
