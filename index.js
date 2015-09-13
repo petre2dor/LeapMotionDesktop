@@ -3,12 +3,10 @@
  */
  Leap = require('leapjs');
 
-
 /*
  * Load LeapJS hand entry plugin
  */
 require('./lib/leap.hand-entry.js');
-
 
 var loopController = new Leap.Controller({
     enableGestures: true,
@@ -23,95 +21,103 @@ loopController.setBackground(true);
 
 config = require('./config.json');
 
-// https://github.com/joeferner/node-java
-var java = require('java');
 
-// https://docs.oracle.com/javase/7/docs/api/java/awt/Robot.html
-var Robot = java.import('java.awt.Robot');
-var robot = new Robot();
+/*
+ * Input controller
+ *
+ * This controller handles processing related to mouse and keyboard input events
+ *
+ */
+var inputController = (function() {
+    var robot = require("robotjs");
 
-var graphicsEnvironment = java.callStaticMethodSync("java.awt.GraphicsEnvironment", "getLocalGraphicsEnvironment");
-var graphicsDevice = java.callMethodSync(graphicsEnvironment, "getDefaultScreenDevice");
-var displayMode = java.callMethodSync(graphicsDevice, "getDisplayMode");
+    function runKeyCombo(keyCombo){
+        console.log(keyCombo);
+        //press keys
+        for (var i = 0; i < keyCombo.length; i++) {
+            robot.keyToggle(keyCombo[i], true);
+        }
 
-var screenResolution = {
-  height : java.callMethodSync(displayMode, "getHeight"),
-  width : java.callMethodSync(displayMode, "getWidth")
-}
-console.log('screenResolution:' + screenResolution);
+        //reverse the arr and release keys
+        for (var i = keyCombo.length - 1; i >= 0; i--) {
+            robot.keyToggle(keyCombo[i], false);
+        }
 
-var mouseActions = ['mouseWheelUp', 'mouseWheelDown'];
+    }
 
-var mouseDown           = false;
-var frameCount          = 0;
-var touchDistanceSum    = 0;
+    return {
+        runKeyCombo: runKeyCombo
+    }
+})();
 
-var previousGesture     = 'none';
-var previousGestureTime = 0;
+/*
+ * Notification controller
+ *
+ * This controller handles system notifications
+ *
+ */
+var notificationController = (function() {
+    /*
+     * Unobtrusive notification system 
+     */
+    var growl = require('growl');
 
-function runGesture(gesture){
+    function show(notification){
+        // console.log(notification.title);
+        // console.log(notification.desciption);
+
+        if(notification.title != undefined && notification.desciption != undefined){
+            growl(notification.desciption, { title: notification.title})
+        }else if(notification.title != undefined){
+            growl(notification.title);
+        }else{
+            console.log(notification.desciption);
+            growl(notification.desciption);
+        }
+    }
+
+    return {
+        show: show
+    }
+})();
+
+
+var gestureController = (function() {
+    var previousGesture     = 'none';
+    var previousGestureTime = 0;
+
+    function run(gesture){
+        var gestureConfig =  config[gesture];
+        if(gesture == previousGesture){
+            wait = gestureConfig.waitBeforeSameGesture;
+        }else{
+            wait = gestureConfig.waitBeforeNextGesture;
+        }
+        var now = new Date();
+        if( (now.getTime() - previousGestureTime) < wait ){
+            // too soon
+            // console.log('trying to run gesture too soon');
+            return false;
+        }
+        switch(gestureConfig.inputType){
+            case 'mouse':
+                console.log('not implemented yet');
+                break;
+            case 'keyboard':
+                notificationController.show(gestureConfig.notification);
+                inputController.runKeyCombo(gestureConfig.keyCombo);
+                break;    
+        }
+
+        previousGestureTime = new Date(); 
+        previousGesture = gesture;
+    }
     
-    var gestureConfig =  config[gesture];
-
-    if(gesture == previousGesture){
-        wait = gestureConfig.waitBeforeSameGesture;
-    }else{
-        wait = gestureConfig.waitBeforeNextGesture;
+    return {
+        run: run
     }
-    var now = new Date();
-    if( (now.getTime() - previousGestureTime) < wait ){
-        return false;
-    }
+})();
 
-    var keyCombo = gestureConfig.keyCombo.split(' + ');
-
-    // press keys
-    for (var i = 0; i < keyCombo.length; i++) {
-        console.log( 'key: ' + keyCombo[i] + ', in array: ' + mouseActions.indexOf(keyCombo[i]) );
-        if( mouseActions.indexOf(keyCombo[i]) == -1 ){
-            keyDown(keyCombo[i]);
-        }
-    }
-
-    // do mouse actions
-    for (var i = 0; i < keyCombo.length; i++) {
-        if( mouseActions.indexOf(keyCombo[i]) > -1 ){
-            switch (keyCombo[i]) {
-                case 'mouseWheelUp':
-                    robot.mouseWheel(-1);
-                    break;
-                case 'mouseWheelDown':
-                    robot.mouseWheel(1);
-                    break;
-                default:
-                    console.log('No action for ' + keyCombo[i]);
-                    break;
-            }
-        }
-    }
-
-    //reverse the arr and release keys
-    for (var i = keyCombo.length - 1; i >= 0; i--) {
-        if(mouseActions.indexOf(keyCombo[i]) == -1){
-            keyUp(keyCombo[i]);
-        }
-    };
-
-    now = new Date();
-    previousGesture     = gesture;
-    previousGestureTime = now.getTime();
-}
-
-function keyDown(key){
-    robot.keyPressSync(java.getStaticFieldValue("java.awt.event.KeyEvent", key));
-}
-
-function keyUp(key){
-    robot.keyReleaseSync(java.getStaticFieldValue("java.awt.event.KeyEvent", key));
-}
-
-
-// var frameCountSwipeGesture = 0;
 var controller = Leap.loop(
     {
         enableGestures: true, 
@@ -121,6 +127,35 @@ var controller = Leap.loop(
     }, 
     function(frame){
         if(frame.valid){
+
+            /*var fewFramesBack = controller.frame(3);
+            if(fewFramesBack.pointables.length > 0){
+                var pointable = fewFramesBack.pointables[0];
+                var prevStabilizedPosition = pointable.stabilizedTipPosition;
+                console.log('fewFramesBack: ');
+                console.log(prevStabilizedPosition[0]);
+                console.log(prevStabilizedPosition[2]);
+                console.log('--------');
+
+                if(frame.pointables.length > 0){
+                    // var mousePosition = pointerLocation();
+                    // console.log(mousePosition);
+                    var pointable = frame.pointables[0];
+                    var currentStabilizedPosition = pointable.stabilizedTipPosition;
+                    console.log(currentStabilizedPosition[0]);
+                    console.log(currentStabilizedPosition[2]);
+                    console.log('--------');
+
+                    var diffx = prevStabilizedPosition[0] - currentStabilizedPosition[0];
+                    var diffy = prevStabilizedPosition[2] - currentStabilizedPosition[2];
+                    console.log('diffx' + diffx);
+                    console.log('diffx' + diffx);
+                    console.log('diffx' + diffx);
+                }
+            }*/
+
+
+
             var extendedFingers = [];
             if(frame.hands.length > 0){
                 var hand = frame.hands[0];
@@ -141,6 +176,7 @@ var controller = Leap.loop(
                     // console.log(gesture.id);
                     switch (gesture.type){
                         case "circle":
+                            console.log('circle');
                             if(
                                 extendedFingers.length > 2 || 
                                 extendedFingers.indexOf('thumb') == -1 || 
@@ -155,16 +191,16 @@ var controller = Leap.loop(
                             var dotProduct = Leap.vec3.dot(direction, gesture.normal);
 
                             if (dotProduct  >  0){
-                                runGesture('oneFingerRotateClockwise');
+                                gestureController.run('oneFingerRotateClockwise');
                             }else{
-                                runGesture('oneFingerRotateContraClockwise');
+                                gestureController.run('oneFingerRotateContraClockwise');
                             }
                             break;
                         case "keyTap":
                             // if(extendedFingers.length > 1 || extendedFingers.indexOf('index') == -1 ){
                             //     break;
                             // }
-                            runGesture('oneFingerKeyTap');
+                            gestureController.run('oneFingerKeyTap');
                             break;
                         case "screenTap":
                             // console.log("Screen Tap Gesture");
@@ -192,7 +228,7 @@ var controller = Leap.loop(
                                 //open hand swipe
                                 if(extendedFingers.length == 5){
                                     console.log('openHandSwipe' + swipeDirection[0].toUpperCase() + swipeDirection.slice(1));
-                                    runGesture('openHandSwipe' + swipeDirection[0].toUpperCase() + swipeDirection.slice(1));
+                                    gestureController.run('openHandSwipe' + swipeDirection[0].toUpperCase() + swipeDirection.slice(1));
                                     break;
                                 }
                             }
@@ -201,7 +237,7 @@ var controller = Leap.loop(
                 });
             }
 
-            if(
+            /*if(
                 extendedFingers.length == 2 && 
                 extendedFingers.indexOf('index') != -1 && 
                 extendedFingers.indexOf('middle') != -1 
@@ -212,12 +248,12 @@ var controller = Leap.loop(
                     console.log("index " + index.stabilizedTipPosition);
                     console.log("middle " + middle.stabilizedTipPosition);
                     if(index.stabilizedTipPosition[1] < 100){
-                        runGesture("twoFingerHoverDown");
+                        gestureController.run("twoFingerHoverDown");
                     }else if(index.stabilizedTipPosition[1] > 160){                        
-                        runGesture("twoFingerHoverUp");
+                        gestureController.run("twoFingerHoverUp");
                     }
                 }
-            }
+            }*/
 
 
             /*if(extendedFingers.length == 1 && extendedFingers.indexOf('index') != -1){

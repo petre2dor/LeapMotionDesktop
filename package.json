@@ -6,7 +6,9 @@
     "license": "GNU GENERAL PUBLIC LICENSE V3",
     "dependencies": {
         "leapjs": "0.6.4",
-        "java": "0.4.4"
+        "java": "0.4.4",
+        "growl": "latest",
+        "robotjs": "latest"
     },
     "keywords": [
         "leap",

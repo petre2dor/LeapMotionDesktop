@@ -1,65 +1,112 @@
 {
 
-    "oneFingerKeyTap": 					
-	{
-		"keyCombo": "VK_CONTROL + VK_ALT + VK_Z",
-		"waitBeforeSameGesture": 1000, 
-		"waitBeforeNextGesture": 700
-	},
+    "oneFingerKeyTap":                  
+    {
+        "inputType": "keyboard",
+        "keyCombo": ["control", "alt", "z"],
+        "waitBeforeSameGesture": 1000, 
+        "waitBeforeNextGesture": 700,
+        "notification": {
+            "title": "Play/Pause",
+            "description": ""
+        }
+    },
 
     "oneFingerRotateClockwise": 
-	{
-		"keyCombo": "VK_CONTROL + VK_UP",
-		"waitBeforeSameGesture": 300, 
-		"waitBeforeNextGesture": 700
-	},
+    {
+        "title": "",
+        "description": "",
+        "inputType": "keyboard",
+        "keyCombo": ["control", "up"],
+        "waitBeforeSameGesture": 300, 
+        "waitBeforeNextGesture": 700,
+        "notification": {
+            "title": "",
+            "description": ""
+        }
+    },
 
     "oneFingerRotateContraClockwise": 
-	{
-		"keyCombo": "VK_CONTROL + VK_DOWN",
-		"waitBeforeSameGesture": 300, 
-		"waitBeforeNextGesture": 700
-	},
+    {
+        "inputType": "keyboard",
+        "keyCombo": ["control", "down"],
+        "waitBeforeSameGesture": 300, 
+        "waitBeforeNextGesture": 700,
+        "notification": {
+            "title": "",
+            "description": ""
+        }
+    },
 
     "openHandSwipeLeft": 
     {
-    	"keyCombo": "VK_CONTROL + VK_ALT + VK_RIGHT",
-    	"waitBeforeSameGesture": 200, 
-    	"waitBeforeNextGesture": 700
+        "inputType": "keyboard",
+        "keyCombo": ["control", "alt", "right"],
+        "waitBeforeSameGesture": 200, 
+        "waitBeforeNextGesture": 700,
+        "notification": {
+            "title": "Switch to workspace",
+            "description": "...to the left"
+        }
     },
 
     "openHandSwipeRight": 
     {
-    	"keyCombo": "VK_CONTROL + VK_ALT + VK_LEFT",
-    	"waitBeforeSameGesture": 200, 
-    	"waitBeforeNextGesture": 700
+        "inputType": "keyboard",
+        "keyCombo": ["control", "alt", "left"],
+        "waitBeforeSameGesture": 200, 
+        "waitBeforeNextGesture": 700,
+        "notification": {
+            "title": "Switch to workspace",
+            "description": "...to the right"
+        }
     },
 
     "openHandSwipeUp": 
     {
-    	"keyCombo": "VK_CONTROL + VK_ALT + VK_DOWN",
-    	"waitBeforeSameGesture": 200, 
-    	"waitBeforeNextGesture": 700
+        "inputType": "keyboard",
+        "keyCombo": ["control", "alt", "down"],
+        "waitBeforeSameGesture": 200, 
+        "waitBeforeNextGesture": 700,
+        "notification": {
+            "title": "Switch to workspace",
+            "description": "...above"
+        }
     },
 
     "openHandSwipeDown": 
     {
-    	"keyCombo": "VK_CONTROL + VK_ALT + VK_UP",
-    	"waitBeforeSameGesture": 200, 
-    	"waitBeforeNextGesture": 700
+        "inputType": "keyboard",
+        "keyCombo": ["control", "alt", "up"],
+        "waitBeforeSameGesture": 200, 
+        "waitBeforeNextGesture": 700,
+        "notification": {
+            "title": "Switch to workspace",
+            "description": "...below"
+        }
     },
 
     "twoFingerHoverDown":
     {
+        "inputType": "mouse",
         "keyCombo": "mouseWheelDown",
         "waitBeforeSameGesture": 100, 
-        "waitBeforeNextGesture": 200  
+        "waitBeforeNextGesture": 200,
+        "notification": {
+            "title": "Scroll down",
+            "description": ""
+        }  
     },
 
     "twoFingerHoverUp":
     {
+        "inputType": "mouse",
         "keyCombo": "mouseWheelUp",
         "waitBeforeSameGesture": 100, 
-        "waitBeforeNextGesture": 200  
+        "waitBeforeNextGesture": 200,
+        "notification": {
+            "title": "Scroll up",
+            "description": ""
+        }  
     }
 }
